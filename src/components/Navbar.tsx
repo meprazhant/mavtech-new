@@ -22,8 +22,25 @@ export default function Navbar() {
     };
   }, [isMenuOpen]);
 
+  // do not render navbar on admin pages
+  if (pathname.startsWith('/admin')) {
+    return null;
+  }
+
   // Handle theme switching based on scroll position
   useEffect(() => {
+    // Reset theme on route change
+    const checkInitialTheme = () => {
+      const mainElement = document.querySelector('[data-theme]');
+      if (mainElement) {
+        const theme = mainElement.getAttribute('data-theme');
+        setIsDark(theme === 'dark');
+      }
+    };
+
+    // Small delay to ensure DOM is ready
+    const timeoutId = setTimeout(checkInitialTheme, 100);
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -43,25 +60,28 @@ export default function Navbar() {
     const sections = document.querySelectorAll('[data-theme]');
     sections.forEach((section) => observer.observe(section));
 
-    return () => observer.disconnect();
-  }, []);
+    return () => {
+      observer.disconnect();
+      clearTimeout(timeoutId);
+    };
+  }, [pathname]);
 
   const menuSections = {
     services: [
       { name: 'Web Development', href: '/services/web' },
       { name: 'Mobile Apps', href: '/services/mobile', badge: 'NEW' },
       { name: 'UI/UX Design', href: '/services/design' },
-      { name: 'Consulting', href: '/services/consulting' },
+      { name: 'Digital Marketing', href: '/services/digital' },
     ],
     explore: [
-      { name: 'MavTech Showcase', href: '/showcase' },
-      { name: 'Updates', href: '/updates' },
-      { name: 'Pricing', href: '/pricing' },
+      { name: 'MavTech Showcase', href: '/project' },
+      { name: 'Blogs', href: '/blogs' },
+      { name: 'News', href: '/news' },
     ],
     featured: {
-      title: 'We just hit 1400 Members!',
-      cta: 'Join them',
-      href: '/join',
+      title: 'New Site is Live',
+      cta: 'Check it out',
+      href: '/contact',
     },
   };
 

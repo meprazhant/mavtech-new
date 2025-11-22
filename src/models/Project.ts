@@ -2,10 +2,11 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IProject extends Document {
   title: string;
-  description: string;
-  image: string;
+  featuredImage: string;
   gallery: string[];
-  content: string;
+  shortDescription: string;
+  longDescription: string;
+  status: 'In Development' | 'Released' | 'Beta Released';
   tags: string[];
   link?: string;
   featured: boolean;
@@ -25,20 +26,25 @@ const ProjectSchema = new Schema<IProject>(
       required: [true, 'Please provide a project title'],
       trim: true,
     },
-    description: {
+    shortDescription: {
       type: String,
-      required: [true, 'Please provide a project description'],
+      required: [true, 'Please provide a short description'],
     },
-    image: {
+    longDescription: {
       type: String,
-      required: [true, 'Please provide a project image'],
+    },
+    featuredImage: {
+      type: String,
+      required: [true, 'Please provide a featured image'],
     },
     gallery: {
       type: [String],
       default: [],
     },
-    content: {
+    status: {
       type: String,
+      enum: ['In Development', 'Released', 'Beta Released'],
+      default: 'In Development',
     },
     tags: {
       type: [String],

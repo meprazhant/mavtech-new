@@ -32,7 +32,7 @@ const NoticeSchema = new Schema<INotice>(
     },
     status: {
       type: String,
-      enum: ['draft', 'sent'],
+      enum: ['draft', 'sent', "feature"],
       default: 'draft',
     },
     sentAt: {

@@ -8,6 +8,7 @@ export default function ProjectManager() {
     const [projects, setProjects] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingId, setEditingId] = useState<string | null>(null);
 
     // Wizard State
     const [currentStep, setCurrentStep] = useState(1);
@@ -15,9 +16,9 @@ export default function ProjectManager() {
 
     const [formData, setFormData] = useState({
         title: '',
-        description: '',
-        content: '',
-        image: '',
+        shortDescription: '',
+        longDescription: '',
+        featuredImage: '',
         gallery: [] as string[],
         tags: '',
         link: '',
@@ -27,6 +28,7 @@ export default function ProjectManager() {
         duration: '1 Month',
         bgColor: '#000000',
         textColor: '#ffffff',
+        status: 'In Development',
     });
 
     useEffect(() => {
@@ -49,9 +51,15 @@ export default function ProjectManager() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!canSubmit) return;
+
+        if (!formData.longDescription || !formData.shortDescription || !formData.title) return;
         try {
-            const res = await fetch('/api/projects', {
-                method: 'POST',
+            const url = editingId ? `/api/projects/${editingId}` : '/api/projects';
+            const method = editingId ? 'PUT' : 'POST';
+
+            const res = await fetch(url, {
+                method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     ...formData,
@@ -64,8 +72,29 @@ export default function ProjectManager() {
                 fetchProjects();
             }
         } catch (error) {
-            console.error('Failed to create project:', error);
+            console.error('Failed to save project:', error);
         }
+    };
+
+    const handleEdit = (project: any) => {
+        setEditingId(project._id);
+        setFormData({
+            title: project.title,
+            shortDescription: project.shortDescription,
+            longDescription: project.longDescription || '',
+            featuredImage: project.featuredImage,
+            gallery: project.gallery || [],
+            tags: project.tags.join(', '),
+            link: project.link || '',
+            featured: project.featured,
+            category: project.category,
+            location: project.location,
+            duration: project.duration,
+            bgColor: project.bgColor,
+            textColor: project.textColor,
+            status: project.status,
+        });
+        setIsModalOpen(true);
     };
 
     const handleDelete = async (id: string) => {
@@ -95,12 +124,13 @@ export default function ProjectManager() {
 
     const closeModal = () => {
         setIsModalOpen(false);
+        setEditingId(null);
         setCurrentStep(1);
         setFormData({
             title: '',
-            description: '',
-            content: '',
-            image: '',
+            shortDescription: '',
+            longDescription: '',
+            featuredImage: '',
             gallery: [],
             tags: '',
             link: '',
@@ -110,11 +140,23 @@ export default function ProjectManager() {
             duration: '1 Month',
             bgColor: '#000000',
             textColor: '#ffffff',
+            status: 'In Development',
         });
     };
 
     const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, totalSteps));
     const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
+
+    // Prevent accidental double-clicks on "Next" triggering "Submit"
+    const [canSubmit, setCanSubmit] = useState(true);
+
+    useEffect(() => {
+        if (currentStep === totalSteps) {
+            setCanSubmit(false);
+            const timer = setTimeout(() => setCanSubmit(true), 1000);
+            return () => clearTimeout(timer);
+        }
+    }, [currentStep]);
 
     return (
         <div className="p-8 max-w-7xl mx-auto">
@@ -155,11 +197,11 @@ export default function ProjectManager() {
                                 <td className="px-6 py-4">
                                     <div className="flex items-center gap-4">
                                         <div className="w-12 h-12 rounded-lg bg-gray-100 overflow-hidden shadow-sm border border-gray-200">
-                                            <img src={project.image} alt="" className="w-full h-full object-cover" />
+                                            <img src={project.featuredImage} alt="" className="w-full h-full object-cover" />
                                         </div>
                                         <div>
                                             <div className="font-bold text-gray-900">{project.title}</div>
-                                            <div className="text-sm text-gray-500 truncate max-w-xs">{project.description}</div>
+                                            <div className="text-sm text-gray-500 truncate max-w-xs">{project.shortDescription}</div>
                                         </div>
                                     </div>
                                 </td>
@@ -173,19 +215,32 @@ export default function ProjectManager() {
                                     </div>
                                 </td>
                                 <td className="px-6 py-4">
-                                    {project.featured ? (
+                                    {project.status === 'Released' ? (
                                         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-green-50 text-green-700 text-xs font-bold rounded-full border border-green-100">
                                             <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
-                                            Featured
+                                            Released
+                                        </span>
+                                    ) : project.status === 'Beta Released' ? (
+                                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-yellow-50 text-yellow-700 text-xs font-bold rounded-full border border-yellow-100">
+                                            <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full"></span>
+                                            Beta
                                         </span>
                                     ) : (
                                         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-50 text-gray-600 text-xs font-bold rounded-full border border-gray-200">
                                             <span className="w-1.5 h-1.5 bg-gray-400 rounded-full"></span>
-                                            Standard
+                                            Dev
                                         </span>
                                     )}
                                 </td>
                                 <td className="px-6 py-4 text-right">
+                                    <button
+                                        onClick={() => handleEdit(project)}
+                                        className="text-gray-400 hover:text-blue-600 transition-colors p-2 hover:bg-blue-50 rounded-lg mr-2"
+                                    >
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                        </svg>
+                                    </button>
                                     <button
                                         onClick={() => handleDelete(project._id)}
                                         className="text-gray-400 hover:text-red-600 transition-colors p-2 hover:bg-red-50 rounded-lg"
@@ -213,7 +268,7 @@ export default function ProjectManager() {
                         >
                             <div className="flex justify-between items-center mb-6">
                                 <div>
-                                    <h3 className="text-2xl font-black text-gray-900 tracking-tight">Add New Project</h3>
+                                    <h3 className="text-2xl font-black text-gray-900 tracking-tight">{editingId ? 'Edit Project' : 'Add New Project'}</h3>
                                     <div className="flex items-center gap-2 mt-2">
                                         {[1, 2, 3, 4].map(step => (
                                             <div
@@ -276,8 +331,8 @@ export default function ProjectManager() {
                                                 <textarea
                                                     required
                                                     rows={3}
-                                                    value={formData.description}
-                                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                                    value={formData.shortDescription}
+                                                    onChange={(e) => setFormData({ ...formData, shortDescription: e.target.value })}
                                                     className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-black focus:border-transparent focus:bg-white outline-none transition-all resize-none"
                                                     placeholder="Brief summary..."
                                                 />
@@ -321,6 +376,26 @@ export default function ProjectManager() {
                                                 </div>
                                             </div>
                                             <div>
+                                                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Status</label>
+                                                <div className="relative">
+                                                    <select
+                                                        required
+                                                        value={formData.status}
+                                                        onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                                                        className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:ring-2 focus:ring-black focus:border-transparent focus:bg-white outline-none transition-all appearance-none"
+                                                    >
+                                                        <option value="In Development">In Development</option>
+                                                        <option value="Released">Released</option>
+                                                        <option value="Beta Released">Beta Released</option>
+                                                    </select>
+                                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div>
                                                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Project Link</label>
                                                 <input
                                                     type="url"
@@ -348,8 +423,8 @@ export default function ProjectManager() {
                                             <h4 className="text-lg font-bold text-gray-900">Media</h4>
                                             <ImageUpload
                                                 label="Feature Image"
-                                                value={formData.image}
-                                                onChange={(url) => setFormData({ ...formData, image: url })}
+                                                value={formData.featuredImage}
+                                                onChange={(url) => setFormData({ ...formData, featuredImage: url })}
                                             />
                                             <div>
                                                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Gallery Images</label>
@@ -387,8 +462,8 @@ export default function ProjectManager() {
                                                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Full Content (HTML)</label>
                                                 <textarea
                                                     rows={12}
-                                                    value={formData.content}
-                                                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                                                    value={formData.longDescription}
+                                                    onChange={(e) => setFormData({ ...formData, longDescription: e.target.value })}
                                                     className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-black focus:border-transparent focus:bg-white outline-none transition-all font-mono text-sm"
                                                     placeholder="<p>Write your article here...</p>"
                                                 />
@@ -417,9 +492,10 @@ export default function ProjectManager() {
                                     ) : (
                                         <button
                                             type="submit"
-                                            className="px-8 py-3 bg-black text-white font-bold rounded-xl hover:bg-gray-900 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+                                            disabled={!canSubmit}
+                                            className={`px-8 py-3 bg-black text-white font-bold rounded-xl hover:bg-gray-900 hover:shadow-lg hover:-translate-y-0.5 transition-all ${!canSubmit ? 'opacity-50 cursor-not-allowed' : ''}`}
                                         >
-                                            Create Project
+                                            {editingId ? 'Update Project' : 'Create Project'}
                                         </button>
                                     )}
                                 </div>

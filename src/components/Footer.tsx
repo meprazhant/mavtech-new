@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import Link from 'next/link';
 import Newsletter from './Newsletter';
+import { usePathname } from 'next/navigation';
 
 export default function Footer() {
   const [mouseX, setMouseX] = useState(0);
@@ -10,6 +11,14 @@ export default function Footer() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   const title = "MAVTECH";
+
+  // do not render footer on admin pages
+  const pathname = usePathname();
+  if (pathname.startsWith('/admin')) {
+    return null;
+  }
+
+
   const [cursorX, setCursorX] = useState(0);
 
   const handleMove = (e: React.MouseEvent<HTMLHeadingElement>) => {

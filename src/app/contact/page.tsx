@@ -64,6 +64,14 @@ export default function ContactPage() {
                         </p>
 
                         <div className="space-y-8">
+
+                            <div>
+                                <h3 className="text-sm font-mono text-[#CCFF00] mb-2 uppercase tracking-wider">Call Us</h3>
+                                <a href="tel:+9779701096430" className="text-2xl font-bold hover:text-gray-300 transition-colors">
+                                    +977 9701096430
+                                </a>
+                            </div>
+
                             <div>
                                 <h3 className="text-sm font-mono text-[#CCFF00] mb-2 uppercase tracking-wider">Email Us</h3>
                                 <a href="mailto:hello@mavtech.com.np" className="text-2xl font-bold hover:text-gray-300 transition-colors">

@@ -18,7 +18,7 @@ export default function ImageUpload({ value, onChange, label, className = '' }: 
         setPreview(value);
     }, [value]);
 
-    const handleUpload = async (file: File) => {
+    const handleUpload = useCallback(async (file: File) => {
         if (!file.type.startsWith('image/')) {
             alert('Please upload an image file');
             return;
@@ -48,7 +48,7 @@ export default function ImageUpload({ value, onChange, label, className = '' }: 
         } finally {
             setIsUploading(false);
         }
-    };
+    }, [onChange]);
 
     const onDragOver = useCallback((e: React.DragEvent) => {
         e.preventDefault();
@@ -66,19 +66,19 @@ export default function ImageUpload({ value, onChange, label, className = '' }: 
         if (e.dataTransfer.files && e.dataTransfer.files[0]) {
             handleUpload(e.dataTransfer.files[0]);
         }
-    }, []);
+    }, [handleUpload]);
 
     const onPaste = useCallback((e: React.ClipboardEvent) => {
         if (e.clipboardData.files && e.clipboardData.files[0]) {
             handleUpload(e.clipboardData.files[0]);
         }
-    }, []);
+    }, [handleUpload]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             handleUpload(e.target.files[0]);
         }
-    };
+    }, [handleUpload]);
 
     return (
         <div className={className}>

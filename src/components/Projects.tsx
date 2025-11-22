@@ -10,9 +10,11 @@ interface Project {
   description: string;
   location: string;
   duration: string;
-  image: string;
-  bgColor: string;
-  textColor: string;
+  featuredImage: string;
+  gallery: string[];
+  shortDescription: string;
+  longDescription: string;
+  status: 'In Development' | 'Released' | 'Beta Released';
 }
 
 
@@ -31,7 +33,9 @@ export default function Projects() {
         const response = await fetch('/api/projects');
         const data = await response.json();
         if (data.success) {
-          setProjects(data.data);
+          // Get the top 6 most recent projects (5 regular + 1 with See All button)
+          const recentProjects = data.data.slice(0, 6);
+          setProjects(recentProjects);
         }
       } catch (error) {
         console.error('Failed to fetch projects:', error);
@@ -74,6 +78,10 @@ export default function Projects() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [loading, projects]);
 
+  if (projects.length === 0) {
+    return <div>No projects found</div>;
+  }
+
   return (
     <section
       ref={sectionRef}
@@ -99,7 +107,7 @@ export default function Projects() {
 
       {/* Stacking Cards Container */}
       <div className="relative">
-        {projects.map((project, index) => {
+        {projects.slice(0, projects?.length - 1).map((project, index) => {
           const progress = stackProgress[index] || 0;
           const scale = 0.9 + (progress * 0.1);
           const translateY = (1 - progress) * 100;
@@ -121,6 +129,7 @@ export default function Projects() {
           ];
 
           const gradient = gradients[index % gradients.length];
+          const isLastCard = index === projects.length - 1;
 
           return (
             <div
@@ -161,6 +170,9 @@ export default function Projects() {
                           </button>
                         </div>
                       </div>
+                      <p className="text-black text-sm line-clamp-2 mb-4 font-serif italic">
+                        {project.shortDescription}
+                      </p>
 
                       {/* Project Details */}
                       <div className="grid grid-cols-2 gap-6 border-t border-white/20 pt-6">
@@ -192,9 +204,9 @@ export default function Projects() {
                         <div className="absolute inset-0 flex items-center justify-center p-6">
                           <div className="relative w-full h-full rounded-xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-500">
                             <img
-                              src={project.image}
+                              src={project.featuredImage}
                               alt={project.title}
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                             />
                           </div>
                         </div>
@@ -202,12 +214,30 @@ export default function Projects() {
                     </div>
                   </div>
                 </div>
+
+                {/* See All Projects Button - Show only on last card */}
+                {isLastCard && (
+                  <div className="flex justify-center pb-8">
+                    <button
+                      onClick={() => window.location.href = '/projects'}
+                      className="group bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-bold text-lg px-10 py-5 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 flex items-center gap-3"
+                    >
+                      See All Projects
+                      <svg
+                        className="w-6 h-6 group-hover:translate-x-1 transition-transform duration-300"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           );
         })}
-
-        {/* Final "See All Projects" Card - Overlaps all stacks */}
         <div className="sticky top-32 z-50 mb-8">
           <div className="max-w-6xl mx-auto px-6">
             <div className="bg-teal-100 rounded-3xl overflow-hidden shadow-2xl">
@@ -217,14 +247,14 @@ export default function Projects() {
                   <div>
                     <div className="inline-block mb-4">
                       <span className="text-gray-800 italic font-serif text-lg">
-                        Vehicle Maintenance Platform
+                        {projects[projects?.length - 1].category}
                       </span>
                     </div>
                     <h3 className="text-4xl md:text-5xl font-black text-gray-800 mb-6 leading-tight">
-                      Simplifying Vehicle Care
+                      {projects[projects?.length - 1].title}
                     </h3>
                     <p className="text-gray-800 text-lg leading-relaxed mb-8 opacity-80">
-                      Zantrik is an innovative vehicle maintenance app. We revamped it with a fresh design, gamification, and intuitive features to boost user engagement.
+                      {projects[projects?.length - 1].shortDescription}
                     </p>
                   </div>
 
@@ -235,15 +265,15 @@ export default function Projects() {
                         Project Duration
                       </p>
                       <p className="text-gray-800 text-xl font-bold">
-                        8 Weeks
+                        {projects[projects?.length - 1].duration}
                       </p>
                     </div>
                     <div>
                       <p className="text-gray-800 text-sm font-semibold mb-1 opacity-60">
-                        Work Scope
+                        Status
                       </p>
                       <p className="text-gray-800 text-xl font-bold">
-                        Mobile App
+                        {projects[projects?.length - 1].status}
                       </p>
                     </div>
                   </div>
@@ -252,27 +282,14 @@ export default function Projects() {
                 {/* Right Image */}
                 <div className="relative flex items-center justify-center">
                   <div
-                    className="relative w-full h-[400px] rounded-2xl overflow-hidden"
-                    style={{
-                      background: 'linear-gradient(135deg, #5eead4 0%, #14b8a6 100%)',
-                    }}
-                  >
-                    {/* Vertical stripes pattern */}
-                    <div
-                      className="absolute inset-0 opacity-20"
-                      style={{
-                        backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(0,0,0,0.1) 20px, rgba(0,0,0,0.1) 40px)',
-                      }}
-                    />
+                    className="relative p-4 border border-white/20 bg-white/40 backdrop-blur-md w-full h-[400px] rounded-2xl overflow-hidden"
 
-                    {/* Placeholder for project image */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
-                        <div className="w-64 h-48 bg-gradient-to-br from-teal-100 to-teal-200 rounded-lg flex items-center justify-center">
-                          <span className="text-gray-400 font-semibold">Project Preview</span>
-                        </div>
-                      </div>
-                    </div>
+                  >
+                    <img
+                      src={projects[projects?.length - 1].featuredImage}
+                      alt={projects[projects?.length - 1].title}
+                      className="h-full w-full object-cover"
+                    />
                   </div>
                 </div>
               </div>

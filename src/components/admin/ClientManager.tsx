@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import ImageUpload from './ImageUpload';
 
 interface Client {
@@ -77,6 +77,15 @@ export default function ClientManager() {
         }
     };
 
+    // Memoized callbacks to prevent form reset
+    const handleMainImageChange = useCallback((url: string) => {
+        setFormData(prev => ({ ...prev, mainImage: url }));
+    }, []);
+
+    const handleLogoImageChange = useCallback((url: string) => {
+        setFormData(prev => ({ ...prev, logoImage: url }));
+    }, []);
+
     return (
         <div className="p-8 max-w-7xl mx-auto">
             <div className="flex justify-between items-end mb-8">
@@ -121,12 +130,12 @@ export default function ClientManager() {
                         <ImageUpload
                             label="Main Image"
                             value={formData.mainImage}
-                            onChange={(url) => setFormData({ ...formData, mainImage: url })}
+                            onChange={handleMainImageChange}
                         />
                         <ImageUpload
                             label="Logo Image"
                             value={formData.logoImage}
-                            onChange={(url) => setFormData({ ...formData, logoImage: url })}
+                            onChange={handleLogoImageChange}
                         />
                     </div>
 

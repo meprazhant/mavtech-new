@@ -10,16 +10,17 @@ import Clients from "@/components/Clients";
 import Footer from "@/components/Footer";
 import LoadingScreen from "@/components/LoadingScreen";
 import Gallery from "@/components/Gallery";
-
+import ModelView from "./3d/ModelView";
 import TeamSection from "@/components/TeamSection";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
+  const MODEL_URL = "/model/base.glb"; // your uploaded file path
+
 
   return (
     <div className="min-h-screen relative">
       {/* All components render immediately */}
-      <Navbar />
 
       <div data-theme="dark">
         <ScrollHero />
@@ -30,7 +31,8 @@ export default function Home() {
       </div>
 
       <div data-theme="dark">
-        <PoweredByAI />
+        {/* <PoweredByAI /> */}
+        <ModelView modelUrl={MODEL_URL} />
       </div>
 
       <div data-theme="light">
@@ -49,9 +51,7 @@ export default function Home() {
         <Clients />
       </div>
 
-      <div data-theme="light">
-        <Footer />
-      </div>
+
 
       {/* Overlay LoadingScreen */}
       {isLoading && <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />}

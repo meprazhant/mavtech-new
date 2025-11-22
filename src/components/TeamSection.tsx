@@ -25,7 +25,7 @@ const teamMembers = [
     id: 4,
     name: 'Nishant Kafle',
     role: 'Android Developer | Full Stack',
-    image: 'https://i.ibb.co/DH88HVFG/89f9cd9eeec457500491d5c7a7b5804f-0.jpg',
+    image: 'https://i.ibb.co/cSKkCJm3/IMG-20241108-231259.jpg',
   },
   {
     id: 5,
