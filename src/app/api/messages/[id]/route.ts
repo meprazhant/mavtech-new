@@ -5,13 +5,14 @@ import { requireAdmin } from '@/lib/auth-helpers';
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await requireAdmin();
     await dbConnect();
+    const { id } = await params;
 
-    const message = await Message.findByIdAndDelete(params.id);
+    const message = await Message.findByIdAndDelete(id);
 
     if (!message) {
       return NextResponse.json({ success: false, error: 'Message not found' }, { status: 404 });
@@ -25,15 +26,16 @@ export async function DELETE(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await requireAdmin();
     await dbConnect();
+    const { id } = await params;
 
     const body = await request.json();
     const message = await Message.findByIdAndUpdate(
-      params.id,
+      id,
       { status: body.status },
       { new: true, runValidators: true }
     );
