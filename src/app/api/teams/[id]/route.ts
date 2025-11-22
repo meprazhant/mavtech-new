@@ -5,11 +5,12 @@ import { requireAuth } from '@/lib/auth-helpers';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await dbConnect();
-    const team = await Team.findById(params.id);
+    const { id } = await params;
+    const team = await Team.findById(id);
 
     if (!team) {
       return NextResponse.json({ success: false, error: 'Team member not found' }, { status: 404 });
@@ -23,14 +24,15 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await requireAuth();
     await dbConnect();
+    const { id } = await params;
 
     const body = await request.json();
-    const team = await Team.findByIdAndUpdate(params.id, body, {
+    const team = await Team.findByIdAndUpdate(id, body, {
       new: true,
       runValidators: true,
     });
@@ -47,13 +49,14 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await requireAuth();
     await dbConnect();
+    const { id } = await params;
 
-    const team = await Team.findByIdAndDelete(params.id);
+    const team = await Team.findByIdAndDelete(id);
 
     if (!team) {
       return NextResponse.json({ success: false, error: 'Team member not found' }, { status: 404 });
