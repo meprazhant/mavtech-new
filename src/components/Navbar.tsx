@@ -68,51 +68,51 @@ export default function Navbar() {
   // Dynamic styles based on theme
   const navStyles = isDark
     ? {
-        bg: 'bg-white/10',
-        border: 'border-white/20',
-        text: 'text-gray-100',
-        hoverText: 'hover:text-white',
-        logoText: 'text-gray-100',
-        hamburger: 'bg-gray-100',
-        // Expanded menu styles
-        expandedBg: 'bg-black/90',
-        expandedBorder: 'border-white/10',
-        headingText: 'text-gray-300',
-        menuLinkText: 'text-gray-100',
-        menuLinkHover: 'hover:text-white',
-        divider: 'border-white/10',
-        socialIcon: 'text-white/60',
-        socialIconHover: 'hover:text-white',
-        featuredCardBg: 'bg-white/5',
-        featuredCardBorder: 'border-white/10',
-        featuredCardTitle: 'text-white',
-        featuredBtnBg: 'bg-white',
-        featuredBtnText: 'text-black',
-        featuredBtnHover: 'hover:bg-white/90',
-      }
+      bg: 'bg-white/10',
+      border: 'border-white/20',
+      text: 'text-gray-100',
+      hoverText: 'hover:text-white',
+      logoText: 'text-gray-100',
+      hamburger: 'bg-gray-100',
+      // Expanded menu styles
+      expandedBg: 'bg-black/90',
+      expandedBorder: 'border-white/10',
+      headingText: 'text-gray-300',
+      menuLinkText: 'text-gray-100',
+      menuLinkHover: 'hover:text-white',
+      divider: 'border-white/10',
+      socialIcon: 'text-white/60',
+      socialIconHover: 'hover:text-white',
+      featuredCardBg: 'bg-white/5',
+      featuredCardBorder: 'border-white/10',
+      featuredCardTitle: 'text-white',
+      featuredBtnBg: 'bg-white',
+      featuredBtnText: 'text-black',
+      featuredBtnHover: 'hover:bg-white/90',
+    }
     : {
-        bg: 'bg-white/70 shadow-lg',
-        border: 'border-black/10',
-        text: 'text-gray-900',
-        hoverText: 'hover:text-black',
-        logoText: 'text-gray-900',
-        hamburger: 'bg-gray-900',
-        // Expanded menu styles
-        expandedBg: 'bg-white/95',
-        expandedBorder: 'border-black/10',
-        headingText: 'text-gray-500',
-        menuLinkText: 'text-gray-900',
-        menuLinkHover: 'hover:text-black',
-        divider: 'border-black/10',
-        socialIcon: 'text-gray-400',
-        socialIconHover: 'hover:text-black',
-        featuredCardBg: 'bg-black/5',
-        featuredCardBorder: 'border-black/10',
-        featuredCardTitle: 'text-gray-900',
-        featuredBtnBg: 'bg-black',
-        featuredBtnText: 'text-white',
-        featuredBtnHover: 'hover:bg-black/90',
-      };
+      bg: 'bg-white/70 shadow-lg',
+      border: 'border-black/10',
+      text: 'text-gray-900',
+      hoverText: 'hover:text-black',
+      logoText: 'text-gray-900',
+      hamburger: 'bg-gray-900',
+      // Expanded menu styles
+      expandedBg: 'bg-white/95',
+      expandedBorder: 'border-black/10',
+      headingText: 'text-gray-500',
+      menuLinkText: 'text-gray-900',
+      menuLinkHover: 'hover:text-black',
+      divider: 'border-black/10',
+      socialIcon: 'text-gray-400',
+      socialIconHover: 'hover:text-black',
+      featuredCardBg: 'bg-black/5',
+      featuredCardBorder: 'border-black/10',
+      featuredCardTitle: 'text-gray-900',
+      featuredBtnBg: 'bg-black',
+      featuredBtnText: 'text-white',
+      featuredBtnHover: 'hover:bg-black/90',
+    };
 
   return (
     <>
@@ -126,7 +126,7 @@ export default function Navbar() {
               px-4 sm:px-6
               py-3
               transition-all duration-500 ease-in-out
-              ${isMenuOpen ? `w-full max-w-7xl rounded-xl ${navStyles.expandedBg} ${navStyles.expandedBorder}` : `w-full max-w-[400px] rounded-full ${navStyles.bg} ${navStyles.border}`}
+              ${isMenuOpen ? `w-full max-w-7xl rounded-xl ${navStyles.expandedBg} ${navStyles.expandedBorder}` : `w-full max-w-[400px] ${navStyles.bg} ${navStyles.border}`}
               ${!isMenuOpen && 'border'}
               ${isMenuOpen && 'border'}
             `}

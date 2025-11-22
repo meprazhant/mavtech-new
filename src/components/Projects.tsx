@@ -17,6 +17,8 @@ interface Project {
 
 
 
+
+
 export default function Projects() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [stackProgress, setStackProgress] = useState<number[]>([]);
@@ -107,6 +109,19 @@ export default function Projects() {
           const finalCardProgress = stackProgress[projects.length] || 0;
           const fadeOutOpacity = finalCardProgress > 0.5 ? Math.max(0, 1 - (finalCardProgress - 0.5) * 2) : 1;
 
+          // Vibrant Gradients Palette
+          const gradients = [
+            'from-purple-600 to-blue-600',
+            'from-pink-500 to-rose-500',
+            'from-orange-400 to-pink-600',
+            'from-emerald-500 to-teal-500',
+            'from-blue-500 to-cyan-500',
+            'from-indigo-500 to-purple-500',
+            'from-yellow-400 to-orange-500',
+          ];
+
+          const gradient = gradients[index % gradients.length];
+
           return (
             <div
               key={project._id}
@@ -118,44 +133,50 @@ export default function Projects() {
               }}
             >
               <div className="max-w-6xl mx-auto px-6">
-                <div className={`${project.bgColor || 'bg-gray-200'} rounded-3xl overflow-hidden shadow-2xl`}>
+                <div className={`bg-gradient-to-br ${gradient} rounded-3xl overflow-hidden shadow-2xl`}>
                   <div className="grid md:grid-cols-2 gap-8 p-8 md:p-12">
                     {/* Left Content */}
-                    <div className="flex flex-col justify-between">
+                    <div className="flex flex-col justify-between text-white">
                       <div>
                         <div className="inline-block mb-4">
-                          <span className={`${project.textColor || 'text-gray-800'} italic font-serif text-lg`}>
+                          <span className="italic font-serif text-lg opacity-90">
                             {project.category}
                           </span>
                         </div>
-                        <h3 className={`text-4xl md:text-5xl font-black ${project.textColor || 'text-gray-800'} mb-6 leading-tight`}>
+                        <h3 className="text-4xl md:text-5xl font-black mb-6 leading-tight">
                           {project.title}
                         </h3>
                         <div className="mb-8">
-                          <p className={`${project.textColor || 'text-gray-800'} text-lg leading-relaxed opacity-80 line-clamp-2`}>
+                          <p className="text-lg leading-relaxed opacity-90 line-clamp-2">
                             {project.description}
                           </p>
-                          <button className={`${project.textColor || 'text-gray-800'} font-semibold hover:underline mt-2`}>
-                            See more
+                          <button
+                            onClick={() => window.location.href = `/projects/${project._id}`}
+                            className="font-bold hover:underline mt-4 inline-flex items-center gap-2"
+                          >
+                            View Case Study
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                            </svg>
                           </button>
                         </div>
                       </div>
 
                       {/* Project Details */}
-                      <div className="grid grid-cols-2 gap-6">
+                      <div className="grid grid-cols-2 gap-6 border-t border-white/20 pt-6">
                         <div>
-                          <p className={`${project.textColor || 'text-gray-800'} text-sm font-semibold mb-1 opacity-60`}>
+                          <p className="text-sm font-bold mb-1 opacity-70 uppercase tracking-wider">
                             Location
                           </p>
-                          <p className={`${project.textColor || 'text-gray-800'} text-xl font-bold`}>
+                          <p className="text-xl font-bold">
                             {project.location}
                           </p>
                         </div>
                         <div>
-                          <p className={`${project.textColor || 'text-gray-800'} text-sm font-semibold mb-1 opacity-60`}>
-                            Project Duration
+                          <p className="text-sm font-bold mb-1 opacity-70 uppercase tracking-wider">
+                            Duration
                           </p>
-                          <p className={`${project.textColor || 'text-gray-800'} text-xl font-bold`}>
+                          <p className="text-xl font-bold">
                             {project.duration}
                           </p>
                         </div>
@@ -165,32 +186,16 @@ export default function Projects() {
                     {/* Right Image */}
                     <div className="relative flex items-center justify-center">
                       <div
-                        className="relative w-full h-[400px] rounded-2xl overflow-hidden"
-                        style={{
-                          background: project.bgColor
-                            ? `linear-gradient(135deg, ${project.bgColor.replace('200', '300')} 0%, ${project.bgColor.replace('200', '400')} 100%)`
-                            : 'linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%)',
-                        }}
+                        className="relative w-full h-[400px] rounded-2xl overflow-hidden bg-white/10 backdrop-blur-md border border-white/20"
                       >
-                        {/* Vertical stripes pattern */}
-                        <div
-                          className="absolute inset-0 opacity-20"
-                          style={{
-                            backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(0,0,0,0.1) 20px, rgba(0,0,0,0.1) 40px)',
-                          }}
-                        />
-
-                        {/* Placeholder for project image */}
                         {/* Project Image */}
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="relative w-[80%] h-[80%] bg-white/90 backdrop-blur-sm rounded-2xl p-2 shadow-xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
-                            <div className="relative w-full h-full rounded-lg overflow-hidden">
-                              <img
-                                src={project.image}
-                                alt={project.title}
-                                className="object-cover"
-                              />
-                            </div>
+                        <div className="absolute inset-0 flex items-center justify-center p-6">
+                          <div className="relative w-full h-full rounded-xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-500">
+                            <img
+                              src={project.image}
+                              alt={project.title}
+                              className="w-full h-full object-cover"
+                            />
                           </div>
                         </div>
                       </div>

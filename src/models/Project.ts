@@ -4,6 +4,8 @@ export interface IProject extends Document {
   title: string;
   description: string;
   image: string;
+  gallery: string[];
+  content: string;
   tags: string[];
   link?: string;
   featured: boolean;
@@ -30,6 +32,13 @@ const ProjectSchema = new Schema<IProject>(
     image: {
       type: String,
       required: [true, 'Please provide a project image'],
+    },
+    gallery: {
+      type: [String],
+      default: [],
+    },
+    content: {
+      type: String,
     },
     tags: {
       type: [String],

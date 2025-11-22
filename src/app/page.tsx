@@ -9,6 +9,7 @@ import BlurText from "@/components/BlurText";
 import Clients from "@/components/Clients";
 import Footer from "@/components/Footer";
 import LoadingScreen from "@/components/LoadingScreen";
+import Gallery from "@/components/Gallery";
 
 import TeamSection from "@/components/TeamSection";
 
@@ -19,19 +20,19 @@ export default function Home() {
     <div className="min-h-screen relative">
       {/* All components render immediately */}
       <Navbar />
-      
+
       <div data-theme="dark">
         <ScrollHero />
       </div>
-      
+
       <div data-theme="light">
         <Projects />
       </div>
-      
+
       <div data-theme="dark">
         <PoweredByAI />
       </div>
-      
+
       <div data-theme="light">
         <BlurText />
       </div>
@@ -39,11 +40,15 @@ export default function Home() {
       <div data-theme="dark">
         <TeamSection />
       </div>
-      
+
+      <div data-theme="dark">
+        <Gallery />
+      </div>
+
       <div data-theme="light">
         <Clients />
       </div>
-      
+
       <div data-theme="light">
         <Footer />
       </div>

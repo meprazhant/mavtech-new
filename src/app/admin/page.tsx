@@ -7,6 +7,7 @@ import AdminSidebar from '@/components/admin/AdminSidebar';
 import ProjectManager from '@/components/admin/ProjectManager';
 import MessageViewer from '@/components/admin/MessageViewer';
 import NoticeSender from '@/components/admin/NoticeSender';
+import ClientManager from '@/components/admin/ClientManager';
 
 export default function AdminDashboard() {
     const { data: session, status } = useSession();
@@ -55,6 +56,8 @@ export default function AdminDashboard() {
                 );
             case 'projects':
                 return <ProjectManager />;
+            case 'clients':
+                return <ClientManager />;
             case 'messages':
                 return <MessageViewer />;
             case 'notices':
