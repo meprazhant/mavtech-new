@@ -27,7 +27,7 @@ interface PageProps {
 async function getProject(id: string): Promise<ProjectData | null> {
     try {
         await dbConnect();
-        const project = await Project.findById(id).lean();
+        const project = await Project.findById(id).lean() as any;
 
         if (!project) {
             return null;
