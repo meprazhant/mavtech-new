@@ -85,9 +85,14 @@ export default function Footer() {
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className={`text-lg font-medium transition-colors ${textClass} ${hoverClass}`}
+                    className={`text-lg font-medium transition-colors ${textClass} ${hoverClass} flex items-center gap-2`}
                   >
                     {item.name}
+                    {item.badge && (
+                      <span className="px-2 py-0.5 text-xs font-bold bg-[#7c3aed] text-white rounded">
+                        {item.badge}
+                      </span>
+                    )}
                   </Link>
                 </li>
               ))}
