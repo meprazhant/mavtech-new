@@ -4,11 +4,14 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import ScrambleText from './ScrambleText';
+import { useSettings } from '@/contexts/SettingsContext';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDark, setIsDark] = useState(true);
   const pathname = usePathname();
+  const { openSettings } = useSettings();
+
 
   // Prevent body scroll when menu is open
   useEffect(() => {
@@ -146,7 +149,7 @@ export default function Navbar() {
               px-4 sm:px-6
               py-3
               transition-all duration-500 ease-in-out
-              ${isMenuOpen ? `w-full max-w-7xl rounded-xl ${navStyles.expandedBg} ${navStyles.expandedBorder}` : `w-full max-w-[400px] ${navStyles.bg} ${navStyles.border}`}
+              ${isMenuOpen ? `w-full max-w-7xl rounded-xl ${navStyles.expandedBg} ${navStyles.expandedBorder}` : `w-full max-w-[500px] ${navStyles.bg} ${navStyles.border}`}
               ${!isMenuOpen && 'border'}
               ${isMenuOpen && 'border'}
             `}
@@ -197,10 +200,11 @@ export default function Navbar() {
               </button>
 
               {/* Logo - Center */}
+              {/* Logo - Center */}
               <Link
                 href="/"
                 className={`
-                  absolute left-1/2 -translate-x-1/2
+                  absolute left-[40%] -translate-x-1/2
                   font-bold text-xl tracking-wider
                   transition-colors duration-200
                   ${isMenuOpen ? navStyles.menuLinkText : `${navStyles.logoText} ${navStyles.hoverText}`}
@@ -211,6 +215,23 @@ export default function Navbar() {
 
               {/* Auth Buttons - Right Side */}
               <div className="flex items-center gap-2 sm:gap-3">
+                {/* Settings Icon */}
+                <button
+                  onClick={openSettings}
+                  className={`
+                    p-2 rounded-lg
+                    transition-all duration-200
+                    ${isMenuOpen ? `${navStyles.menuLinkText} hover:bg-white/10` : `${navStyles.text} ${navStyles.hoverText} hover:bg-black/5`}
+                  `}
+                  aria-label="Settings"
+                  title="Settings"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </button>
+
                 <Link
                   href="/contact"
                   className="

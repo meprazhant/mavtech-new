@@ -29,15 +29,20 @@ export default function Footer() {
   const menuSections = {
     services: [
       { name: 'Web Development', href: '/services/web' },
-      { name: 'Mobile Apps', href: '/services/mobile' },
+      { name: 'Mobile Apps', href: '/services/mobile', badge: 'NEW' },
       { name: 'UI/UX Design', href: '/services/design' },
-      { name: 'Consulting', href: '/services/consulting' },
+      { name: 'Digital Marketing', href: '/services/digital' },
     ],
     explore: [
-      { name: 'MavTech Showcase', href: '/showcase' },
-      { name: 'Updates', href: '/updates' },
-      { name: 'Pricing', href: '/pricing' },
+      { name: 'MavTech Showcase', href: '/project' },
+      { name: 'Blogs', href: '/blogs' },
+      { name: 'News', href: '/news' },
     ],
+    featured: {
+      title: 'New Site is Live',
+      cta: 'Check it out',
+      href: '/contact',
+    },
   };
 
   const socialLinks = [

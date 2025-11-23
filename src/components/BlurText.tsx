@@ -30,9 +30,9 @@ export default function BlurText() {
 
       // Calculate progress through the section
       const start = sectionTop - windowHeight * 0.8;
-      const end = sectionTop + sectionHeight - windowHeight * 0.2;
+      const end = sectionTop + sectionHeight - windowHeight * 1;
       const progress = Math.max(0, Math.min(1, (scrollY - start) / (end - start)));
-      
+
       setScrollProgress(progress);
     };
 
@@ -48,9 +48,9 @@ export default function BlurText() {
 
       const section = sectionRef.current;
       const rect = section.getBoundingClientRect();
-      
+
       // Check if mouse is within section
-      const inSection = 
+      const inSection =
         e.clientX >= rect.left &&
         e.clientX <= rect.right &&
         e.clientY >= rect.top &&
@@ -59,7 +59,7 @@ export default function BlurText() {
       if (inSection) {
         // Calculate vertical position as percentage (0 to 1)
         const relativeY = (e.clientY - rect.top) / rect.height;
-        
+
         // Only show image if mouse is between 30% and 70% of component height
         const inVerticalRange = relativeY >= 0.3 && relativeY <= 0.7;
         setIsMouseInSection(inVerticalRange);
@@ -73,7 +73,7 @@ export default function BlurText() {
 
           // Determine direction based on mouse movement
           const deltaX = e.clientX - previousXRef.current;
-          
+
           if (Math.abs(deltaX) > 2) { // Threshold to avoid jitter
             if (deltaX < 0) {
               setCurrentImageIndex(0); // Moving left
@@ -100,7 +100,7 @@ export default function BlurText() {
   const words = text.split(' ');
 
   return (
-    <section 
+    <section
       ref={sectionRef}
       className="relative min-h-screen bg-white flex items-center justify-center py-32 px-6 overflow-hidden cursor-default"
     >

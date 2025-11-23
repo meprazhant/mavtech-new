@@ -214,7 +214,7 @@ function Logo({ onReady, modelUrl, scrollRef, scrollPixelsRef, debug = false, fl
                 targetY = THREE.MathUtils.lerp(1.5, 0, t); // ~40px from top visually
             } else {
                 // 🖥️ Desktop: original top-left positioning
-                targetX = THREE.MathUtils.lerp(-1.8, 0, t);
+                targetX = THREE.MathUtils.lerp(-2.2, 0, t);
                 targetY = THREE.MathUtils.lerp(2.1, 0, t);
             }
         }

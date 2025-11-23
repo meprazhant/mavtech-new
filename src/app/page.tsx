@@ -12,10 +12,12 @@ import LoadingScreen from "@/components/LoadingScreen";
 import Gallery from "@/components/Gallery";
 import ModelView from "./3d/ModelView";
 import TeamSection from "@/components/TeamSection";
+import { useSettings } from "@/contexts/SettingsContext";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const MODEL_URL = "/model/base.glb"; // your uploaded file path
+  const { show3DModel } = useSettings();
 
 
   return (
@@ -31,8 +33,9 @@ export default function Home() {
       </div>
 
       <div data-theme="dark">
-        {/* <PoweredByAI /> */}
-        <ModelView modelUrl={MODEL_URL} />
+        {show3DModel && (
+          <ModelView modelUrl={MODEL_URL} />
+        )}
       </div>
 
       <div data-theme="light">
